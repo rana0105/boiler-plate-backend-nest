@@ -1,10 +1,12 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { Repository } from 'typeorm';
+import { Repository, In } from 'typeorm';
 import { User } from '../users/user.entity';
 import { Role } from '../roles/role.entity';
 import { Permission } from '../permissions/permission.entity';
 import * as bcrypt from 'bcrypt';
+import * as fs from 'fs';
+import * as path from 'path';
 
 @Injectable()
 export class UserSeedService {
@@ -15,23 +17,40 @@ export class UserSeedService {
   ) {}
 
   async seed() {
-    const readUser = await this.permissionRepo.save({ name: 'read_user' });
-    const writeUser = await this.permissionRepo.save({ name: 'write_user' });
-    const updateUser = await this.permissionRepo.save({ name: 'update_user' });
-    const deleteUser = await this.permissionRepo.save({ name: 'delete_user' });
+    const permissionsPath = path.join(__dirname, '..', '..', 'database', 'seed-data', 'permissions.json');
+    const permissionNames: string[] = JSON.parse(fs.readFileSync(permissionsPath, 'utf-8'));
 
-    const adminRole = await this.roleRepo.save({
-      name: 'admin',
-      permissions: [readUser, writeUser, updateUser, deleteUser],
+    const permissions: Permission[] = [];
+    for (const name of permissionNames) {
+      let permission = await this.permissionRepo.findOneBy({ name });
+      if (!permission) {
+        permission = this.permissionRepo.create({ name });
+        await this.permissionRepo.save(permission);
+      }
+      permissions.push(permission);
+    }
+
+    let adminRole = await this.roleRepo.findOne({
+      where: { name: 'admin' },
+      relations: ['permissions'],
     });
 
-    const hashedPassword = await bcrypt.hash('12345678', 10);
+    if (!adminRole) {
+      adminRole = this.roleRepo.create({ name: 'admin', permissions });
+      await this.roleRepo.save(adminRole);
+    }
 
-    await this.userRepo.save({
-      email: 'admin@admin.com',
-      password: hashedPassword,
-      roles: [adminRole],
-    });
+    const email = 'admin@admin.com';
+    const existingUser = await this.userRepo.findOneBy({ email });
+    if (!existingUser) {
+      const hashedPassword = await bcrypt.hash('12345678', 10);
+      const adminUser = this.userRepo.create({
+        email,
+        password: hashedPassword,
+        roles: [adminRole],
+      });
+      await this.userRepo.save(adminUser);
+    }
 
     console.log('✅ User seed completed');
   }

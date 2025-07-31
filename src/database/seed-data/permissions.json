@@ -1,0 +1,17 @@
+[
+    "list-user",
+    "create-user",
+    "show-user",
+    "update-user",
+    "delete-user",
+    "list-role",
+    "create-role",
+    "show-role",
+    "update-role",
+    "delete-role",
+    "list-permission",
+    "create-permission",
+    "show-permission",
+    "update-permission",
+    "delete-permission"
+]
