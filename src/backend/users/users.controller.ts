@@ -33,7 +33,7 @@ export class UsersController {
   @Post()
   async create(@Body() body: UserCreateDto) {
     try {
-      const user = await this.usersService.create(body.email, body.password, body.name, body.roleNames);
+      const user = await this.usersService.create(body.email, body.password, body.name, body.roleNames, body.permissionNames);
       return BaseResponse.success('User created successfully', user);
     } catch (err) {
       return BaseResponse.fromException(err);

@@ -33,7 +33,7 @@ export class RolesController {
   @Post()
   async create(@Body() body: RoleCreateDto) {
     try {
-      const created = await this.rolesService.create(body.name);
+      const created = await this.rolesService.create(body.name, body.permissionNames);
       return BaseResponse.success('Role created successfully', created);
     } catch (err) {
       return BaseResponse.fromException(err);
@@ -43,7 +43,7 @@ export class RolesController {
   @Put(':id')
   async update(@Param('id') id: number, @Body() body: RoleUpdateDto) {
     try {
-      const updated = await this.rolesService.update(id, body.name);
+      const updated = await this.rolesService.update(id, body.name, body.permissionNames);
       return BaseResponse.success('Role updated successfully', updated);
     } catch (err) {
       return BaseResponse.fromException(err);
