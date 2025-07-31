@@ -44,6 +44,10 @@ $ npm run start:dev
 $ npm run start:prod
 ```
 
+## Project Setup using Docker
+
+$ docker-compose up --build
+
 ## Run tests
 
 ```bash
