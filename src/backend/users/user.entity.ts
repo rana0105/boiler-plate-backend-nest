@@ -8,6 +8,7 @@ import {
   UpdateDateColumn,
 } from 'typeorm';
 import { Role } from '../roles/role.entity';
+import { Permission } from '../permissions/permission.entity';
 
 @Entity('users')
 export class User {
@@ -26,6 +27,10 @@ export class User {
   @ManyToMany(() => Role, (role) => role.users, { cascade: true })
   @JoinTable({ name: 'user_roles' })
   roles: Role[];
+
+  @ManyToMany(() => Permission, { cascade: true })
+  @JoinTable({ name: 'user_permissions' })
+  permissions: Permission[];
 
   @CreateDateColumn({ name: 'created_at' })
   createdAt: Date;

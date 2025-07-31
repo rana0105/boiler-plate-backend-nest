@@ -26,4 +26,9 @@ export class UserCreateDto {
   @IsArray({ message: 'Role Names must be an array' })
   @IsString({ each: true, message: 'Each role must be a string' })
   roleNames?: string[];
+
+  @IsOptional()
+  @IsArray({ message: 'Permission Names must be an array' })
+  @IsString({ each: true, message: 'Each permission must be a string' })
+  permissionNames?: string[];
 }

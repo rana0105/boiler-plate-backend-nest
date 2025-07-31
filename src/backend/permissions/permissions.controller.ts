@@ -4,13 +4,16 @@ import { PermissionCreateDto } from './dto/permission.create.dto';
 import { PermissionUpdateDto } from './dto/permission.update.dto';
 import { BaseResponse } from '../common/response/base.response';
 import { JwtAuthGuard } from '../../backend/auth/jwt-auth.guard';
+import { PermissionsGuard } from '../auth/permissions.guard';
+import { Permissions } from '../common/decorators/permissions.decorator';
 
-@UseGuards(JwtAuthGuard)
+@UseGuards(JwtAuthGuard, PermissionsGuard)
 @Controller('permissions')
 export class PermissionsController {
   constructor(private readonly permissionsService: PermissionsService) { }
 
   @Get()
+  @Permissions('list-permission')
   async findAll() {
     try {
       const permissions = await this.permissionsService.findAll();
@@ -21,6 +24,7 @@ export class PermissionsController {
   }
 
   @Get(':id')
+  @Permissions('show-permission')
   async findOne(@Param('id') id: number) {
     try {
       const permission = await this.permissionsService.findOne(id);
@@ -31,6 +35,7 @@ export class PermissionsController {
   }
 
   @Post()
+  @Permissions('create-permission')
   async create(@Body() body: PermissionCreateDto) {
     try {
       const created = await this.permissionsService.create(body.name);
@@ -41,6 +46,7 @@ export class PermissionsController {
   }
 
   @Put(':id')
+  @Permissions('update-permission')
   async update(@Param('id') id: number, @Body() body: PermissionUpdateDto) {
     try {
       const updated = await this.permissionsService.update(id, body.name);
@@ -51,6 +57,7 @@ export class PermissionsController {
   }
 
   @Delete(':id')
+  @Permissions('delete-permission')
   async delete(@Param('id') id: number) {
     try {
       await this.permissionsService.delete(id);
