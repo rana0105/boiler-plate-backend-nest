@@ -11,6 +11,8 @@ import { SeedModule } from './backend/seed/seed.module';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
 
+const isDev = process.env.NODE_ENV === 'development';
+
 @Module({
   imports: [
     TypeOrmModule.forRoot({
@@ -22,6 +24,7 @@ import { AppService } from './app.service';
       database: process.env.DB_NAME,
       entities: [__dirname + '/**/*.entity{.ts,.js}'],
       synchronize: true,
+      dropSchema: isDev,
     }),
     AuthModule,
     UsersModule,
