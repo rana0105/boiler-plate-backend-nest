@@ -48,6 +48,8 @@ $ npm run start:prod
 
 $ docker-compose up --build
 
+$ docker-compose exec api npm run seed
+
 ## Run tests
 
 ```bash
