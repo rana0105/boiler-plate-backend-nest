@@ -3,12 +3,14 @@ import {
   PrimaryGeneratedColumn,
   Column,
   ManyToMany,
+  ManyToOne,
   JoinTable,
   CreateDateColumn,
   UpdateDateColumn,
 } from 'typeorm';
 import { Role } from '../roles/role.entity';
 import { Permission } from '../permissions/permission.entity';
+import { Organization } from '../organizations/organization.entity';
 
 @Entity('users')
 export class User {
@@ -23,6 +25,9 @@ export class User {
 
   @Column({ nullable: true })
   name: string;
+
+  @ManyToOne(() => Organization, (organization) => organization.users, { nullable: false })
+  organization: Organization;
 
   @ManyToMany(() => Role, (role) => role.users, { cascade: true })
   @JoinTable({ name: 'user_roles' })

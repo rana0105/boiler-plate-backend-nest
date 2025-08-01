@@ -5,10 +5,11 @@ import { Role } from '../roles/role.entity';
 import { Permission } from '../permissions/permission.entity';
 import { UserSeedService } from './user.seed.service';
 import { UsersModule } from '../users/users.module';
+import { Organization } from '../organizations/organization.entity';
 
 @Module({
   imports: [
-    TypeOrmModule.forFeature([User, Role, Permission]),
+    TypeOrmModule.forFeature([User, Role, Permission, Organization]),
     UsersModule,
   ],
   providers: [UserSeedService],

@@ -38,7 +38,7 @@ export class RolesController {
   @Permissions('create-role')
   async create(@Body() body: RoleCreateDto) {
     try {
-      const created = await this.rolesService.create(body.name, body.permissionNames);
+      const created = await this.rolesService.create(body.name, body.organizationId, body.permissionNames);
       return BaseResponse.success('Role created successfully', created);
     } catch (err) {
       return BaseResponse.fromException(err);

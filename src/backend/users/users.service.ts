@@ -20,13 +20,13 @@ export class UsersService {
   ) {}
 
   async findAll(): Promise<User[]> {
-    return this.userRepository.find({ relations: ['roles', 'permissions'] });
+    return this.userRepository.find({ relations: ['organization', 'roles', 'permissions'] });
   }
 
   async findOne(id: number): Promise<User> {
     const user = await this.userRepository.findOne({
       where: { id },
-      relations: ['roles', 'permissions'],
+      relations: ['organization', 'roles', 'permissions'],
     });
 
     if (!user) throw new NotFoundException(`User with id ${id} not found`);
@@ -88,11 +88,21 @@ export class UsersService {
   }
 
   async validateUser(email: string, password: string): Promise<User | null> {
-    const user = await this.userRepository.findOne({ where: { email } });
-    if (user && (await bcrypt.compare(password, user.password))) {
-      return user;
+    const user = await this.userRepository.findOne({
+      where: { email },
+      relations: ['organization', 'roles', 'permissions'],
+    });
+
+    if (!user) return null;
+
+    const isPasswordValid = await bcrypt.compare(password, user.password);
+    if (!isPasswordValid) return null;
+
+    if (!user.organization) {
+      return null;
     }
-    return null;
+
+    return user;
   }
 
   async getUserPermissions(userId: number): Promise<string[]> {

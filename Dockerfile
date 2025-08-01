@@ -2,7 +2,7 @@
 FROM node:22.3.0
 
 # Declare build-time argument
-ARG APP_PORT=3000
+ARG APP_PORT=3030
 
 # Set runtime environment variable
 ENV APP_PORT=${APP_PORT}

@@ -1,8 +1,8 @@
 {
-  "name": "boiler-plate-backend-nest",
+  "name": "nest-saas-multi-tenat",
   "version": "0.0.1",
   "description": "",
-  "author": "",
+  "author": "Morshed Khan Rana",
   "private": true,
   "license": "UNLICENSED",
   "scripts": {

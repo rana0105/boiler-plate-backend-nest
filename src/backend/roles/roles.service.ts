@@ -15,18 +15,18 @@ export class RolesService {
   ) {}
 
   async findAll() {
-    return this.roleRepository.find({ relations: ['permissions'] });
+    return this.roleRepository.find({ relations: ['organization', 'permissions'] });
   }
 
   async findOne(id: number) {
-    const role = await this.roleRepository.findOne({ where: { id }, relations: ['permissions'] });
+    const role = await this.roleRepository.findOne({ where: { id }, relations: ['organization', 'permissions'] });
     if (!role) throw new NotFoundException(`Role with id ${id} not found`);
     return role;
   }
 
-  async create(name: string, permissionNames: string[] = []) {
+  async create(name: string, organizationId: number,  permissionNames: string[] = []) {
     const permissions = await this.permissionRepository.findBy({ name: In(permissionNames) });
-    const role = this.roleRepository.create({ name, permissions });
+    const role = this.roleRepository.create({ name, permissions, organization: { id: organizationId } });
     return this.roleRepository.save(role);
   }
 

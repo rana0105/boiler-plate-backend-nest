@@ -3,10 +3,12 @@ import {
   PrimaryGeneratedColumn,
   Column,
   ManyToMany,
+  ManyToOne,
   CreateDateColumn,
   UpdateDateColumn,
 } from 'typeorm';
 import { Role } from '../roles/role.entity';
+import { Organization } from '../organizations/organization.entity';
 
 @Entity('permissions')
 export class Permission {
@@ -15,6 +17,9 @@ export class Permission {
 
   @Column({ unique: true })
   name: string;
+
+  @ManyToOne(() => Organization, (organization) => organization.permissions, { nullable: false })
+  organization: Organization;
 
   @ManyToMany(() => Role, (role) => role.permissions)
   roles: Role[];

@@ -13,4 +13,7 @@ export class RoleCreateDto {
   @IsArray({ message: 'Permission must be an array' })
   @IsString({ each: true, message: 'Each pemission must be a string' })
   permissionNames?: string[];
+
+  @IsNotEmpty({ message: 'Organization ID is required' })
+  organizationId: number;
 }
